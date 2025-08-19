@@ -25,7 +25,10 @@ if uploaded_file:
         if "Unnamed: 1" not in entities_cash.columns:
             st.error("Expected column 'Unnamed: 1' not found in 'Entities & Cash' sheet.")
             st.stop()
-        entities_cash = entities_cash.dropna(subset=["Unnamed: 1"])
+        entities_cash = xls.parse("Entities & Cash", skiprows=3)
+entities_cash.columns = entities_cash.iloc[0]  # Set row 4 as header
+entities_cash = entities_cash[1:]  # Drop the header row
+entities_cash = entities_cash.dropna(subset=["Entity"])  # Clean rows missing 'Entity'
 
         # --- Extract FE Need ---
         fe_row = funding_needs[funding_needs["Entity Name"] == "Fossil East"]
